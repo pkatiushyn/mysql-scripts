@@ -1,0 +1,10 @@
+# This cron truncates day+1 data in t1 table. Contact DBAs for any questions.
+20 23 * * * root  timeout 60 /usr/bin/mysql -e"ALTER TABLE db1.t1 TRUNCATE PARTITION d$(date --date='tomorrow' "+\%d");" || echo "Error truncating partition on db1.t1"
+
+# Three below crons to cover months with 30,29 or 28 days in month
+22 23 28-31 * * root  [[ "$(date --date=tomorrow +\%d)" == "01" && "$(date +\%d)" == "30" ]] && (timeout 60 /usr/bin/mysql -e"ALTER TABLE db1.t1 TRUNCATE PARTITION d31;" || echo "Error truncating partition on db1.t1")
+
+24 23 28-31 * * root  [[ "$(date --date=tomorrow +\%d)" == "01" && "$(date +\%d)" == "29" ]] && (timeout 60 /usr/bin/mysql -e"ALTER TABLE db1.t1 TRUNCATE PARTITION d30,d31;" || echo "Error truncating partition on db1.t1")
+
+26 23 28-31 * * root  [[ "$(date --date=tomorrow +\%d)" == "01" && "$(date +\%d)" == "28" ]] && (timeout 60 /usr/bin/mysql -e"ALTER TABLE db1.t1 TRUNCATE PARTITION d29,d30,d31;" || echo "Error truncating partition on db1.t1")
+

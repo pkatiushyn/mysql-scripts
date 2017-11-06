@@ -1,0 +1,4 @@
+# This cron truncates next month partition data in t1 table. Contact DBAs for any questions.
+# The cron will run last day of month. It takes into account variable end of month day.
+55 23 28-31 * * root [[ "$(date --date=tomorrow +\%d)" == "01" ]] && (timeout 60 /usr/bin/mysql -e"ALTER TABLE db1.t1 TRUNCATE PARTITION m$(date --date='+10 days' "+\%m");" || echo "error truncating db1.t1 partition") 
+

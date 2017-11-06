@@ -6,7 +6,7 @@ PASSWORD="XXXXXXXXXX"
 MYSQLSOURCE="/usr/bin/mysql -uapp_xxxx -p${PASSWORD} --quick --force dbname1"
 MYSQLDEST="/usr/bin/mysql -uapp_xxxx -p${PASSWORD} -hserver1 dbname2"
 SOURCES="server1 server2"
-DUMP_DIR="/opt/dumps/entitlements/"
+DUMP_DIR="/opt/dumps/"
 DUMP_TS=$(date +%Y%m%d-%H%M%S)
 
 for source in $SOURCES 
@@ -30,27 +30,16 @@ do
                                         count(*)
                                    FROM table1 e
                                    LEFT JOIN table3 ed 
-                                     ON e.id=ed.permission_event_id
+                                     ON e.id=ed.event_id
                                   WHERE e.id between $MINID and $MAXID;
      
                                  SELECT 0,
-                                        e.unique_token,
-                                        e.entry_timestamp,
-                                        e.user_domain,
-                                        e.user_name,
-                                        e.listing_flow_id,
-                                        e.permitted_global,
-                                        e.application,
-                                        e.legal_entity,
-                                        e.desk,
-                                        e.market,
-                                        ed.entitlement_key,
-                                        ed.permitted_local,
-                                        ed.reason,
-                                        ed.additional_fields,
+                                        e.c1,
+                                        e.c2,
+                                        ed.c1,
                                         $CONSOLIDATIONID
                                    FROM table1 e
-                                   LEFT JOIN table2 ed ON e.id=ed.permission_event_id
+                                   LEFT JOIN table2 ed ON e.id=ed.event_id
                                   WHERE e.id between $MINID and $MAXID;
    
                                   COMMIT;
